@@ -25,7 +25,7 @@ export const uploadImageAndAnalyze = async (
     const imageUrl = await getDownloadURL(uploadResult.ref);
 
     // Call your Google Cloud AutoML endpoint
-    const autoMLResponse = await fetch('/api/analyze-skin', {
+    const autoMLResponse = await fetch(`${import.meta.env.VITE_CLOUD_FUNCTIONS_URL}/analyzeSkin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
