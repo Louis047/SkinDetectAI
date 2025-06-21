@@ -1,6 +1,9 @@
-# SkinDetect AI – Next-Generation Dermatology Diagnosis
+# SkinDetect AI
 
-## 🎯 Addressing Critical Healthcare Gaps
+A cloud-native web application that uses Google Cloud AutoML Vision to classify common skin diseases from user-uploaded images.
+
+
+## Addressing Critical Healthcare Gaps
 
 ### **Current Healthcare System Limitations:**
 1. **Limited Access**: Rural areas lack dermatology specialists
@@ -16,7 +19,7 @@
 - **Progress Tracking**: Historical analysis storage
 - **Accessibility**: Web and mobile support
 
-## 🚀 Technical Innovation
+## Technical Innovation
 
 ### **Why Our Approach is Superior:**
 1. **Google Cloud AutoML**: State-of-the-art transfer learning
@@ -31,7 +34,7 @@
 - **Confidence Scoring**: Transparent uncertainty quantification
 - **Integration Ready**: API for healthcare providers
 
-## 📊 Impact Metrics
+## Impact Metrics
 - **Target Accuracy**: >95% for common conditions
 - **Processing Time**: <5 seconds per image
 - **Cost Reduction**: 90% vs traditional consultation
@@ -48,7 +51,7 @@ An end-to-end, cloud-native web app that uses AI to analyze skin conditions from
 
 ---
 
-## 📦 Tech Stack Overview
+## Tech Stack Overview
 
 - **Frontend**  
   - **Framework**: React 18 + Vite + TypeScript  
@@ -73,5 +76,67 @@ An end-to-end, cloud-native web app that uses AI to analyze skin conditions from
 
 ---
 
-## 📝 Project Architecture
+## Project Architecture
+
+```
+SkinDetectAI/
+├── src/            # React + Vite frontend
+│   ├── components/ # Reusable UI elements
+│   ├── pages/      # Route-level components
+│   └── ...
+├── functions/      # Firebase Cloud Functions (Node.js backend)
+├── dataset/        # Local image dataset folders
+├── firebase.json   # Firebase project configuration
+├── .firebaserc     # Firebase project alias
+└── README.md
+```
+
+Data flow:
+1. User uploads an image from the React app.
+2. The image is stored in Cloud Storage via a signed URL.
+3. The frontend calls the `analyzeSkin` Cloud Function.
+4. The function forwards the image to the AutoML Vision model and returns predictions.
+5. Results are displayed in the UI and optionally logged to Firestore.
+
+## Project Setup
+
+### Prerequisites
+- Node.js 18+
+- Firebase CLI (`npm i -g firebase-tools`)
+- Google Cloud SDK (`gcloud`) and `gsutil`
+- A Google Cloud project with Firestore, Cloud Functions, and AutoML Vision APIs enabled
+
+### 1. Clone and install dependencies
+```bash
+git clone https://github.com/Louis047/SkinDetectAI.git
+cd SkinDetectAI
+npm install
+```
+
+### 2. Configure Firebase
+```bash
+firebase login
+firebase use <your-project-id>
+```
+
+Set environment variables for Cloud Functions:
+```bash
+firebase functions:config:set automl.project_id="<PROJECT_ID>" automl.model_id="<MODEL_ID>"
+```
+
+### 3. Run locally
+```bash
+# Start React dev server
+npm run dev
+# In another terminal
+firebase emulators:start
+```
+
+### 4. Deploy
+```bash
+# Deploy backend functions
+firebase deploy --only functions
+# Deploy frontend (e.g. Vercel, Netlify) or `firebase deploy --only hosting` if using Firebase Hosting
+```
+
 
