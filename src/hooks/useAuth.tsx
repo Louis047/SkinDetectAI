@@ -1,19 +1,23 @@
 
 import { useState, useEffect, createContext, useContext } from 'react';
-import { 
-  User, 
-  signInWithEmailAndPassword, 
+import {
+  User,
+  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
-  onAuthStateChanged 
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -32,12 +36,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return unsubscribe;
   }, []);
 
+  const ensureUserDoc = async (usr: User) => {
+    const userRef = doc(db, 'users', usr.uid);
+    const snap = await getDoc(userRef);
+    if (!snap.exists()) {
+      await setDoc(userRef, {
+        email: usr.email,
+        displayName: usr.displayName || '',
+        photoURL: usr.photoURL || '',
+        createdAt: serverTimestamp(),
+      });
+    }
+  };
+
   const login = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    const cred = await signInWithEmailAndPassword(auth, email, password);
+    await ensureUserDoc(cred.user);
   };
 
   const register = async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    await ensureUserDoc(cred.user);
+  };
+
+  const loginWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    const cred = await signInWithPopup(auth, provider);
+    await ensureUserDoc(cred.user);
   };
 
   const logout = async () => {
@@ -49,6 +74,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     loading,
     login,
     register,
+    loginWithGoogle,
     logout
   };
 

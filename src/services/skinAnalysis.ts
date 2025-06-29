@@ -1,75 +1,46 @@
 
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { collection, addDoc, doc, getDoc } from 'firebase/firestore';
-import { storage, db } from '@/lib/firebase';
+import { storage, analyzeSkinFn } from '@/lib/firebase';
+// NOTE: Firestore (`db`) is available from `firebase.ts` but is not
+// used in this public-demo build. Uncomment the following line and
+// the code inside `uploadImageAndAnalyze` if you later want to persist
+// each analysis.
+// import { collection, addDoc } from 'firebase/firestore';
 
 export interface AnalysisResult {
-  id: string;
+
   imageUrl: string;
   predictions: Array<{
     condition: string;
     confidence: number;
   }>;
   timestamp: Date;
-  userId: string;
+
 }
 
 export const uploadImageAndAnalyze = async (
-  file: File, 
-  userId: string
+  file: File
 ): Promise<AnalysisResult> => {
   try {
     // Upload image to Firebase Storage
-    const imageRef = ref(storage, `skin-images/${userId}/${Date.now()}_${file.name}`);
+    const imageRef = ref(storage, `skin-images/public/${Date.now()}_${file.name}`);
     const uploadResult = await uploadBytes(imageRef, file);
     const imageUrl = await getDownloadURL(uploadResult.ref);
 
-    // Call your Google Cloud AutoML endpoint
-    const autoMLResponse = await fetch(`${import.meta.env.VITE_CLOUD_FUNCTIONS_URL}/analyzeSkin`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ imageUrl }),
-    });
+    // Invoke the Cloud Function via Firebase callable
+    const { data } = await analyzeSkinFn({ imageUrl });
+    const predictions = (data as any)?.predictions ?? [];
 
-    const predictions = await autoMLResponse.json();
-
-    // Store result in Firestore
+    // Build result object (not persisted in public demo)
     const analysisData = {
       imageUrl,
-      predictions: predictions.predictions || [],
+      predictions,
       timestamp: new Date(),
-      userId,
-    };
+    } as AnalysisResult;
 
-    const docRef = await addDoc(collection(db, 'skin-analyses'), analysisData);
-
-    return {
-      id: docRef.id,
-      ...analysisData,
-    };
+    return analysisData;
   } catch (error) {
     console.error('Error analyzing skin image:', error);
     throw error;
   }
-};
-
-export const getAnalysisById = async (id: string): Promise<AnalysisResult | null> => {
-  try {
-    const docRef = doc(db, 'skin-analyses', id);
-    const docSnap = await getDoc(docRef);
-    
-    if (docSnap.exists()) {
-      return {
-        id: docSnap.id,
-        ...docSnap.data(),
-      } as AnalysisResult;
-    }
-    
-    return null;
-  } catch (error) {
-    console.error('Error fetching analysis:', error);
-    throw error;
-  }
-};
+}

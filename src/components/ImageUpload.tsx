@@ -4,7 +4,7 @@ import { Upload, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { useAuth } from '@/hooks/useAuth';
+
 import { uploadImageAndAnalyze, AnalysisResult } from '@/services/skinAnalysis';
 import { useToast } from '@/hooks/use-toast';
 
@@ -16,18 +16,10 @@ export function ImageUpload({ onAnalysisComplete }: ImageUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [progress, setProgress] = useState(0);
-  const { user } = useAuth();
+
   const { toast } = useToast();
 
   const handleFileUpload = useCallback(async (file: File) => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please sign in to analyze images.",
-        variant: "destructive",
-      });
-      return;
-    }
 
     if (!file.type.startsWith('image/')) {
       toast({
@@ -47,7 +39,7 @@ export function ImageUpload({ onAnalysisComplete }: ImageUploadProps) {
         setProgress(prev => Math.min(prev + 10, 90));
       }, 200);
 
-      const result = await uploadImageAndAnalyze(file, user.uid);
+      const result = await uploadImageAndAnalyze(file);
       
       clearInterval(progressInterval);
       setProgress(100);
@@ -73,7 +65,7 @@ export function ImageUpload({ onAnalysisComplete }: ImageUploadProps) {
         variant: "destructive",
       });
     }
-  }, [user, toast, onAnalysisComplete]);
+  }, [toast, onAnalysisComplete]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();

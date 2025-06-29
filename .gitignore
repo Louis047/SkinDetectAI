@@ -26,4 +26,4 @@ dist-ssr
 # Ignore local stuff (secure)
 notes.txt
 assets/secure
-
+functions/.env
