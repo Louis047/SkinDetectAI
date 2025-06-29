@@ -141,14 +141,31 @@ export function ImageUpload({ onAnalysisComplete }: ImageUploadProps) {
               className="hidden"
               id="file-upload"
             />
-            <Button 
-              variant="outline" 
-              className="w-full"
-              onClick={() => document.getElementById('file-upload')?.click()}
-            >
-              <Upload className="mr-2 h-4 w-4" />
-              Choose File
-            </Button>
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={handleFileSelect}
+              className="hidden"
+              id="camera-upload"
+            />
+            <div className="flex flex-col sm:flex-row gap-3 w-full">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => document.getElementById('file-upload')?.click()}
+              >
+                <Upload className="mr-2 h-4 w-4" />
+                Choose File
+              </Button>
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => document.getElementById('camera-upload')?.click()}
+              >
+                📷 Take Photo
+              </Button>
+            </div>
           </div>
 
           <p className="text-xs text-muted-foreground">

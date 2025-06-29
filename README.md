@@ -1,5 +1,99 @@
 # SkinDetect AI
 
+AI-powered skin-condition screening in your browser.
+
+[Live Demo »](https://skindetectai.web.app)
+
+---
+
+## Features
+
+• 📷 **Camera & Gallery Upload** – Works on mobile (Camera Capture API) and desktop (drag-drop).
+• ⚡ **Real-time Analysis** – Calls a Vertex AI image-classification model via Firebase Cloud Functions; response in <5 s.
+• 🎯 **High Confidence Filtering** – Results shown only when model certainty ≥ 0.85.
+• 🛡 **Private & Secure** – Images streamed straight to Vertex AI, not stored.
+• 🖥 **PWA Ready** – Responsive, touch-friendly UI built with React 18 + Tailwind + shadcn/ui.
+
+---
+
+## Tech Stack
+
+| Layer        | Stack |
+|--------------|-------|
+| Frontend     | React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, TanStack Query |
+| Backend      | Firebase Cloud Functions (Node 20) |
+| ML Inference | Vertex AI (AutoML Vision) |
+| Hosting / CDN| Firebase Hosting (+ free SSL) |
+
+---
+
+## Project Structure
+
+```text
+SkinDetectAI/
+├── src/               # React app (components, pages, hooks, services)
+├── functions/         # Cloud Functions (analyzeSkin)
+├── dist/              # Production build (generated)
+├── firebase.json      # Firebase Hosting & rewrites
+└── README.md
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+* Node 18+
+* Firebase CLI `npm i -g firebase-tools`
+* A Google Cloud project with Vertex AI enabled and a deployed endpoint
+
+### 1 · Clone & install
+
+```bash
+git clone https://github.com/Louis047/SkinDetectAI.git
+cd SkinDetectAI
+npm install
+```
+
+### 2 · Configure Firebase & secrets
+
+```bash
+firebase login
+firebase use <PROJECT_ID>
+# Store endpoint secrets (no .env committed)
+firebase functions:config:set vertex.region="us-central1" vertex.endpoint_id="<ENDPOINT_ID>"
+```
+
+### 3 · Run locally
+
+```bash
+npm run dev            # start Vite dev server
+firebase emulators:start --only functions,hosting
+```
+Visit http://localhost:5000 to use the local site.
+
+### 4 · Deploy
+
+```bash
+npm run build                        # generate dist/
+firebase deploy --only functions     # backend
+firebase deploy --only hosting       # frontend
+```
+Your site will be live at `https://<project-id>.web.app` – attach a custom domain in Firebase Hosting if desired.
+
+---
+
+## Contributing
+
+Bug reports and pull requests are welcome! Please open an issue first to discuss changes.
+
+---
+
+## License
+
+MIT © 2025 SkinDetect AI Team
+
 A cloud-native web application that uses Google Cloud AutoML Vision to classify common skin diseases from user-uploaded images.
 
 
