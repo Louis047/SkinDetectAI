@@ -27,3 +27,4 @@ dist-ssr
 notes.txt
 assets/secure
 functions/.env
+.env.local
