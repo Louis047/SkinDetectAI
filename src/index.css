@@ -103,7 +103,7 @@
   }
 
   .hover-lift {
-    @apply transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-2xl;
+    @apply transition-shadow duration-200 ease-out hover:shadow-xl;
   }
 
   .glow-border {

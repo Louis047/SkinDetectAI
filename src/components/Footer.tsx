@@ -55,22 +55,22 @@ export function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-2 text-muted-foreground">
                 <Mail className="h-4 w-4" />
-                <span>support@skindetect.ai</span>
+                <span>zerokineticzk@gmail.com</span>
               </div>
               <div className="flex items-center space-x-2 text-muted-foreground">
                 <Phone className="h-4 w-4" />
-                <span>+1 (555) 123-4567</span>
+                <span>+91 880879412</span>
               </div>
               <div className="flex items-center space-x-2 text-muted-foreground">
                 <MapPin className="h-4 w-4" />
-                <span>San Francisco, CA</span>
+                <span>Earth</span>
               </div>
             </div>
           </div>
         </div>
 
         <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
-          <p>&copy; 2024 SkinDetect AI. All rights reserved.</p>
+          <p>© 2024 SkinDetect AI. All rights reserved.</p>
         </div>
       </div>
     </footer>

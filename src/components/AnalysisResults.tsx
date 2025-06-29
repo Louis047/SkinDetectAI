@@ -1,7 +1,6 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, CheckCircle, Info } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { CheckCircle, Info } from 'lucide-react';
 import { AnalysisResult } from '@/services/skinAnalysis';
 
 interface AnalysisResultsProps {
@@ -9,17 +8,11 @@ interface AnalysisResultsProps {
 }
 
 export function AnalysisResults({ result }: AnalysisResultsProps) {
-  const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 0.8) return 'text-green-600';
-    if (confidence >= 0.6) return 'text-yellow-600';
-    return 'text-red-600';
-  };
-
-  const getConfidenceIcon = (confidence: number) => {
-    if (confidence >= 0.8) return CheckCircle;
-    if (confidence >= 0.6) return Info;
-    return AlertTriangle;
-  };
+  const CONFIDENCE_THRESHOLD = 0.85; // below this treated as no detection
+  const topPredictionRaw = result.predictions.length > 0
+    ? result.predictions.reduce((max, curr) => curr.confidence > max.confidence ? curr : max, result.predictions[0])
+    : null;
+  const topPrediction = topPredictionRaw && topPredictionRaw.confidence >= CONFIDENCE_THRESHOLD ? topPredictionRaw : null;
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -40,23 +33,14 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
           </div>
           
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold">Detected Conditions:</h3>
-            {result.predictions.length > 0 ? (
-              <div className="space-y-3">
-                {result.predictions.map((prediction, index) => {
-                  const ConfidenceIcon = getConfidenceIcon(prediction.confidence);
-                  return (
-                    <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <ConfidenceIcon className={`h-5 w-5 ${getConfidenceColor(prediction.confidence)}`} />
-                        <span className="font-medium">{prediction.condition}</span>
-                      </div>
-                      <Badge variant="outline" className={getConfidenceColor(prediction.confidence)}>
-                        {(prediction.confidence * 100).toFixed(1)}%
-                      </Badge>
-                    </div>
-                  );
-                })}
+            <h3 className="text-lg font-semibold">Detected Condition:</h3>
+            {topPrediction ? (
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium text-lg">{topPrediction.condition}</span>
+                  <span className="text-sm text-muted-foreground">{(topPrediction.confidence * 100).toFixed(1)}%</span>
+                </div>
+                <Progress value={Math.round(topPrediction.confidence * 100)} className="h-2" />
               </div>
             ) : (
               <p className="text-muted-foreground">No specific conditions detected.</p>

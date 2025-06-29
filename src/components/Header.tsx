@@ -1,14 +1,10 @@
-
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+
 import { Activity, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
 export function Header() {
-  const navigate = useNavigate();
-  const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -37,16 +33,6 @@ export function Header() {
 
         <div className="flex items-center space-x-4 animate-slide-in-right">
           <ThemeToggle />
-          {user ? (
-            <Button variant="outline" size="sm" onClick={logout} className="hidden md:inline-flex hover-lift">
-              Sign out
-            </Button>
-          ) : (
-            <Button className="hidden md:inline-flex hover-lift" onClick={() => navigate('/login')}>
-              Get Started
-            </Button>
-          )}
-          
           {/* Mobile Menu Button */}
           <Button
             variant="ghost"
@@ -75,11 +61,6 @@ export function Header() {
             <a href="#contact" className="block text-sm font-medium hover:text-primary transition-colors">
               Contact
             </a>
-            {user ? (
-              <Button className="w-full" variant="outline" onClick={logout}>Sign out</Button>
-            ) : (
-              <Button className="w-full" onClick={() => {setIsMenuOpen(false);navigate('/login');}}>Get Started</Button>
-            )}
           </nav>
         </div>
       )}

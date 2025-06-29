@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Zap, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ImageUpload } from '@/components/ImageUpload';
 import { AnalysisResults } from '@/components/AnalysisResults';
@@ -51,17 +51,9 @@ export function HeroSection() {
                   Analyze Another Image
                 </Button>
               )}
-              <Button variant="outline" size="lg" className="hover-lift group">
-                Learn More
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
             </div>
 
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Zap className="h-4 w-4 text-yellow-500" />
-                <span>Instant Results</span>
-              </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <span>Google Cloud AI</span>
