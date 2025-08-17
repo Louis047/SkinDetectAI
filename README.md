@@ -1,3 +1,6 @@
+> [!NOTE] 
+> Due to high fee payment for the cloud backend services and not being able to pay it with the current financial status, I **UNFORTUNATELY** had to shut down Google Cloud's Vertex AI and Firebase Hosting in order to avoid payments. Decided to rewrite the whole project with a different architecture with the same scope if I find anything feasible enough. Sorry for the inconveience caused. 
+
 # SkinDetect AI
 
 Web-Based Skin Disease Detection using Google Cloud AutoML and Firestore
